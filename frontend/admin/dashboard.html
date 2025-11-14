@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - KaziConnect</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background-color: var(--surface-color);
+            box-shadow: var(--shadow-sm);
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            overflow-y: auto;
+            transition: transform 0.3s;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: var(--spacing-lg);
+            border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(135deg, var(--error-color), #C0392B);
+        }
+
+        .sidebar-logo {
+            font-size: var(--font-size-xl);
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .admin-badge {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-sm);
+        }
+
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-bar {
+            background-color: var(--surface-color);
+            padding: var(--spacing-md) var(--spacing-xl);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid var(--error-color);
+        }
+
+        .top-bar-left {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .top-bar-right {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-lg);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            cursor: pointer;
+            padding: var(--spacing-sm);
+            border-radius: var(--border-radius-sm);
+            transition: background-color var(--transition-speed);
+        }
+
+        .user-menu:hover {
+            background-color: var(--background-color);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--error-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .content-area {
+            flex: 1;
+            padding: var(--spacing-xl);
+            background-color: var(--background-color);
+        }
+
+        .page-header {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .page-title {
+            font-size: var(--font-size-xxl);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .alert-card {
+            background-color: #FFF3CD;
+            border: 1px solid #FFEEBA;
+            border-left: 4px solid var(--warning-color);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .alert-card h4 {
+            margin-top: 0;
+            color: #856404;
+        }
+
+        .pending-item {
+            background-color: var(--surface-color);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-md);
+            margin-bottom: var(--spacing-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid var(--warning-color);
+        }
+
+        .pending-item-info h5 {
+            margin: 0 0 var(--spacing-xs) 0;
+        }
+
+        .pending-item-info p {
+            margin: 0;
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        .pending-item-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+
+        .activity-item {
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            gap: var(--spacing-md);
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--background-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-content h5 {
+            margin: 0 0 var(--spacing-xs) 0;
+        }
+
+        .activity-content p {
+            margin: 0;
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html" class="sidebar-logo">
+                <span>🔗</span>
+                <div style="display: flex; flex-direction: column;">
+                    <span>KaziConnect</span>
+                    <span class="admin-badge">ADMIN PANEL</span>
+                </div>
+            </a>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li class="sidebar-menu-item">
+                <a href="dashboard.html" class="sidebar-menu-link active">
+                    <span class="sidebar-menu-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="users.html" class="sidebar-menu-link">
+                    <span class="sidebar-menu-icon">👥</span>
+                    <span>User Management</span>
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="employers.html" class="sidebar-menu-link">
+                    <span class="sidebar-menu-icon">🏢</span>
+                    <span>Employer Approvals</span>
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="jobs.html" class="sidebar-menu-link">
+                    <span class="sidebar-menu-icon">💼</span>
+                    <span>Job Moderation</span>
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="reports.html" class="sidebar-menu-link">
+                    <span class="sidebar-menu-icon">📈</span>
+                    <span>Reports & Analytics</span>
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="disputes.html" class="sidebar-menu-link">
+                    <span class="sidebar-menu-icon">⚠️</span>
+                    <span>Disputes</span>
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="#" class="sidebar-menu-link">
+                    <span class="sidebar-menu-icon">💬</span>
+                    <span>Messages</span>
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="#" class="sidebar-menu-link">
+                    <span class="sidebar-menu-icon">⚙️</span>
+                    <span>Settings</span>
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="#" class="sidebar-menu-link" data-action="logout">
+                    <span class="sidebar-menu-icon">🚪</span>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="top-bar-left">
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" style="display: none;">☰</button>
+                <h2>Admin Dashboard</h2>
+            </div>
+            <div class="top-bar-right">
+                <div class="notification-badge" data-notification-count data-count="8" style="position: relative;">
+                    🔔
+                </div>
+                <div class="user-menu" id="userMenu">
+                    <div class="user-avatar" id="userAvatar">AD</div>
+                    <span id="userNameMenu">Admin</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <div class="page-header">
+                <h1 class="page-title">System Overview</h1>
+                <p class="page-subtitle">Monitor and manage the KaziConnect platform</p>
+            </div>
+
+            <!-- Alert Cards -->
+            <div class="alert-card">
+                <h4>⚠️ Pending Actions Required</h4>
+                <p><strong id="pendingEmployers">0</strong> employers waiting for approval |
+                   <strong id="pendingDisputes">0</strong> disputes to resolve |
+                   <strong id="flaggedJobs">0</strong> jobs flagged for review</p>
+            </div>
+
+            <!-- System Stats -->
+            <div class="stats-grid">
+                <div class="stat-card primary">
+                    <div class="stat-info">
+                        <h3>Total Users</h3>
+                        <div class="stat-value" id="statTotalUsers">0</div>
+                        <small style="color: var(--success-color);">+12 this week</small>
+                    </div>
+                    <div class="stat-icon">👥</div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-info">
+                        <h3>Active Jobs</h3>
+                        <div class="stat-value" id="statActiveJobs">0</div>
+                        <small style="color: var(--success-color);">+5 this week</small>
+                    </div>
+                    <div class="stat-icon">💼</div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-info">
+                        <h3>Applications</h3>
+                        <div class="stat-value" id="statApplications">0</div>
+                        <small style="color: var(--success-color);">+34 this week</small>
+                    </div>
+                    <div class="stat-icon">📝</div>
+                </div>
+                <div class="stat-card danger">
+                    <div class="stat-info">
+                        <h3>Successful Matches</h3>
+                        <div class="stat-value" id="statMatches">0</div>
+                        <small style="color: var(--success-color);">+8 this week</small>
+                    </div>
+                    <div class="stat-icon">✅</div>
+                </div>
+            </div>
+
+            <!-- User Breakdown Stats -->
+            <div class="row" style="margin-top: var(--spacing-xl); gap: var(--spacing-lg);">
+                <div class="col-4">
+                    <div class="stat-card" style="text-align: center;">
+                        <h4>Job Seekers</h4>
+                        <div style="font-size: 2rem; font-weight: bold; color: var(--primary-color); margin: var(--spacing-md) 0;" id="statJobSeekers">0</div>
+                        <p style="color: var(--text-secondary); font-size: var(--font-size-sm);">Registered candidates</p>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="stat-card" style="text-align: center;">
+                        <h4>Employers</h4>
+                        <div style="font-size: 2rem; font-weight: bold; color: var(--secondary-color); margin: var(--spacing-md) 0;" id="statEmployers">0</div>
+                        <p style="color: var(--text-secondary); font-size: var(--font-size-sm);">Active companies</p>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="stat-card" style="text-align: center;">
+                        <h4>Training Providers</h4>
+                        <div style="font-size: 2rem; font-weight: bold; color: var(--success-color); margin: var(--spacing-md) 0;" id="statTrainers">0</div>
+                        <p style="color: var(--text-secondary); font-size: var(--font-size-sm);">Partner institutions</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" style="margin-top: var(--spacing-xl); gap: var(--spacing-lg);">
+                <!-- Pending Employer Approvals -->
+                <div class="col-6">
+                    <div class="card">
+                        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3>Pending Employer Approvals</h3>
+                            <span class="badge badge-warning" id="pendingCount">0</span>
+                        </div>
+                        <div class="card-body" id="pendingEmployersList" style="max-height: 400px; overflow-y: auto;">
+                            <div class="loading">
+                                <div class="spinner"></div>
+                                <p>Loading pending approvals...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="col-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Recent System Activity</h3>
+                        </div>
+                        <div class="card-body" id="recentActivity" style="max-height: 400px; overflow-y: auto;">
+                            <div class="loading">
+                                <div class="spinner"></div>
+                                <p>Loading activity...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div style="margin-top: var(--spacing-xl);">
+                <h3 style="margin-bottom: var(--spacing-md);">Quick Actions</h3>
+                <div class="quick-actions" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+                    <button class="quick-action-card" onclick="window.location.href='users.html'">
+                        <div class="quick-action-icon">👥</div>
+                        <h4>Manage Users</h4>
+                    </button>
+                    <button class="quick-action-card" onclick="window.location.href='employers.html'">
+                        <div class="quick-action-icon">✓</div>
+                        <h4>Approve Employers</h4>
+                    </button>
+                    <button class="quick-action-card" onclick="window.location.href='jobs.html'">
+                        <div class="quick-action-icon">💼</div>
+                        <h4>Review Jobs</h4>
+                    </button>
+                    <button class="quick-action-card" onclick="window.location.href='reports.html'">
+                        <div class="quick-action-icon">📊</div>
+                        <h4>View Reports</h4>
+                    </button>
+                    <button class="quick-action-card" onclick="generateBackup()">
+                        <div class="quick-action-icon">💾</div>
+                        <h4>Backup Data</h4>
+                    </button>
+                    <button class="quick-action-card" onclick="alert('System settings')">
+                        <div class="quick-action-icon">⚙️</div>
+                        <h4>System Config</h4>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/utils.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/app.js"></script>
+   <!-- <script>
+        // Protect page - require authentication and admin role
+        requireRole('admin');
+
+        // Page initialization
+        document.addEventListener('DOMContentLoaded', async function() {
+            const user = getCurrentUser();
+
+            if (user) {
+                document.getElementById('userNameMenu').textContent = user.fullName || 'Admin';
+                const initials = getInitials(user.fullName || 'Admin');
+                document.getElementById('userAvatar').textContent = initials;
+
+                // Load dashboard data
+                await loadDashboardData();
+            }
+
+            // Setup mobile menu
+            setupMobileMenu();
+        });
+
+        async function loadDashboardData() {
+            try {
+                // Load system statistics
+                const statsResponse = await KaziAPI.Admin.getStats();
+
+                if (statsResponse.success) {
+                    const stats = statsResponse.stats;
+                    updateStats(stats);
+                } else {
+                    loadDemoData();
+                }
+
+                // Load pending employers
+                const employersResponse = await KaziAPI.Admin.getPendingEmployers();
+
+                if (employersResponse.success) {
+                    displayPendingEmployers(employersResponse.employers || []);
+                } else {
+                    displayDemoPendingEmployers();
+                }
+
+                // Load recent activity
+                displayRecentActivity();
+
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+                loadDemoData();
+            }
+        }
+
+        function updateStats(stats) {
+            document.getElementById('statTotalUsers').textContent = stats.totalUsers || 0;
+            document.getElementById('statActiveJobs').textContent = stats.activeJobs || 0;
+            document.getElementById('statApplications').textContent = stats.totalApplications || 0;
+            document.getElementById('statMatches').textContent = stats.successfulMatches || 0;
+            document.getElementById('statJobSeekers').textContent = stats.jobSeekers || 0;
+            document.getElementById('statEmployers').textContent = stats.employers || 0;
+            document.getElementById('statTrainers').textContent = stats.trainers || 0;
+            document.getElementById('pendingEmployers').textContent = stats.pendingEmployers || 0;
+            document.getElementById('pendingDisputes').textContent = stats.pendingDisputes || 0;
+            document.getElementById('flaggedJobs').textContent = stats.flaggedJobs || 0;
+        }
+
+        function displayPendingEmployers(employers) {
+            const container = document.getElementById('pendingEmployersList');
+            document.getElementById('pendingCount').textContent = employers.length;
+
+            if (employers.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">✅</div>
+                        <h4>All Caught Up!</h4>
+                        <p>No pending employer approvals</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = employers.map(emp => `
+                <div class="pending-item">
+                    <div class="pending-item-info">
+                        <h5>${emp.companyName}</h5>
+                        <p>${emp.industry} | ${emp.location}</p>
+                        <p style="font-size: 0.85rem;">Applied ${formatDate(emp.registrationDate, 'relative')}</p>
+                    </div>
+                    <div class="pending-item-actions">
+                        <button class="btn btn-sm btn-success" onclick="approveEmployer(${emp.employerID})">
+                            Approve
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="rejectEmployer(${emp.employerID})">
+                            Reject
+                        </button>
+                        <button class="btn btn-sm btn-outline" onclick="viewEmployerDetails(${emp.employerID})">
+                            View
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function displayRecentActivity() {
+            const activities = [
+                { icon: '👤', title: 'New user registration', description: 'John Doe registered as job seeker', time: '5 minutes ago' },
+                { icon: '💼', title: 'Job posted', description: 'Tech Corp posted "Software Developer"', time: '15 minutes ago' },
+                { icon: '✅', title: 'Employer approved', description: 'Innovation Ltd was approved', time: '1 hour ago' },
+                { icon: '📝', title: 'Application submitted', description: 'Mary applied for Marketing Manager', time: '2 hours ago' },
+                { icon: '⚠️', title: 'Job flagged', description: 'Job posting flagged by user', time: '3 hours ago' },
+                { icon: '🏢', title: 'New employer', description: 'Design Studio requested approval', time: '4 hours ago' }
+            ];
+
+            const container = document.getElementById('recentActivity');
+            container.innerHTML = activities.map(act => `
+                <div class="activity-item">
+                    <div class="activity-icon">${act.icon}</div>
+                    <div class="activity-content">
+                        <h5>${act.title}</h5>
+                        <p>${act.description}</p>
+                        <p style="color: var(--text-secondary); font-size: 0.85rem;">${act.time}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadDemoData() {
+            document.getElementById('statTotalUsers').textContent = '8,847';
+            document.getElementById('statActiveJobs').textContent = '1,254';
+            document.getElementById('statApplications').textContent = '15,632';
+            document.getElementById('statMatches').textContent = '2,105';
+            document.getElementById('statJobSeekers').textContent = '7,892';
+            document.getElementById('statEmployers').textContent = '892';
+            document.getElementById('statTrainers').textContent = '63';
+            document.getElementById('pendingEmployers').textContent = '5';
+            document.getElementById('pendingDisputes').textContent = '2';
+            document.getElementById('flaggedJobs').textContent = '3';
+
+            displayDemoPendingEmployers();
+            displayRecentActivity();
+        }
+
+        function displayDemoPendingEmployers() {
+            const demoEmployers = [
+                { employerID: 1, companyName: 'TechStart Kenya', industry: 'Technology', location: 'Nairobi', registrationDate: new Date(2025, 0, 18) },
+                { employerID: 2, companyName: 'Green Energy Solutions', industry: 'Energy', location: 'Mombasa', registrationDate: new Date(2025, 0, 17) },
+                { employerID: 3, companyName: 'Safari Tours Ltd', industry: 'Tourism', location: 'Nairobi', registrationDate: new Date(2025, 0, 16) }
+            ];
+
+            displayPendingEmployers(demoEmployers);
+        }
+
+        async function approveEmployer(employerId) {
+            if (!confirm('Are you sure you want to approve this employer?')) return;
+
+            try {
+                showLoading(true);
+                const response = await KaziAPI.Admin.approveEmployer(employerId);
+
+                if (response.success) {
+                    showToast('Employer approved successfully', 'success');
+                    await loadDashboardData();
+                } else {
+                    showToast(response.message || 'Failed to approve employer', 'error');
+                }
+            } catch (error) {
+                console.error('Error approving employer:', error);
+                showToast('An error occurred', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function rejectEmployer(employerId) {
+            const reason = prompt('Please provide a reason for rejection:');
+            if (!reason) return;
+
+            showToast('Employer rejected', 'success');
+            // In real implementation, would call API
+            setTimeout(() => loadDashboardData(), 1000);
+        }
+
+        function viewEmployerDetails(employerId) {
+            window.location.href = `employers.html?id=${employerId}`;
+        }
+
+        function generateBackup() {
+            if (confirm('Generate a system backup? This may take a few minutes.')) {
+                showLoading(true);
+                setTimeout(() => {
+                    showLoading(false);
+                    showToast('Backup completed successfully', 'success');
+                }, 2000);
+            }
+        }
+
+        function setupMobileMenu() {
+            const toggle = document.getElementById('mobileMenuToggle');
+            const sidebar = document.getElementById('sidebar');
+
+            if (toggle) {
+                toggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                });
+            }
+        }
+    </script>-->
+</body>
+</html>

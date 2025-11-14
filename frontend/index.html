@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="KaziConnect - Empowering Kenyan youth through digital job matching and skill development">
+    <title>KaziConnect - Connect Youth with Opportunities</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-container container">
+            <a href="index.html" class="navbar-brand">
+                <span>🔗</span>
+                KaziConnect
+            </a>
+            <button class="navbar-toggle" id="navbarToggle">
+                ☰
+            </button>
+            <ul class="navbar-menu" id="navbarMenu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="login.html" class="btn btn-outline">Login</a></li>
+                <li><a href="register.html" class="btn btn-primary">Get Started</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1 class="hero-title">Empowering Kenyan Youth</h1>
+            <p class="hero-subtitle">
+                Connect with employers, access training programs, and build your career with KaziConnect
+            </p>
+            <div class="hero-buttons">
+                <a href="register.html?role=job-seeker" class="btn btn-primary btn-lg">
+                    I'm Looking for a Job
+                </a>
+                <a href="register.html?role=employer" class="btn btn-secondary btn-lg">
+                    I'm Hiring
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="container" style="margin-top: -40px;">
+        <div class="stats-grid">
+            <div class="stat-card primary">
+                <div class="stat-info">
+                    <h3>Active Jobs</h3>
+                    <div class="stat-value" id="statsJobs">0</div>
+                </div>
+                <div class="stat-icon">💼</div>
+            </div>
+            <div class="stat-card success">
+                <div class="stat-info">
+                    <h3>Job Seekers</h3>
+                    <div class="stat-value" id="statsSeekers">0</div>
+                </div>
+                <div class="stat-icon">👥</div>
+            </div>
+            <div class="stat-card warning">
+                <div class="stat-info">
+                    <h3>Employers</h3>
+                    <div class="stat-value" id="statsEmployers">0</div>
+                </div>
+                <div class="stat-icon">🏢</div>
+            </div>
+            <div class="stat-card danger">
+                <div class="stat-info">
+                    <h3>Successful Matches</h3>
+                    <div class="stat-value" id="statsMatches">0</div>
+                </div>
+                <div class="stat-icon">✅</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="container mt-4 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="text-center mb-3">About KaziConnect</h2>
+                <div class="row">
+                    <div class="col-6">
+                        <h3>Our Mission</h3>
+                        <p>
+                            KaziConnect aims to empower young people in Kenya by creating pathways to meaningful
+                            employment and entrepreneurship through technology. We bridge the gap between job seekers,
+                            employers, and training providers.
+                        </p>
+                        <p>
+                            By providing a centralized system for employment matching and skills development,
+                            KaziConnect contributes directly to reducing youth unemployment and promoting
+                            sustainable livelihoods across Kenya.
+                        </p>
+                    </div>
+                    <div class="col-6">
+                        <h3>The Problem We Solve</h3>
+                        <p>
+                            Youth unemployment remains one of the most pressing socio-economic challenges in Kenya.
+                            Approximately 13.4% of Kenyan youth are unemployed, with thousands of graduates joining
+                            the job market each year without sufficient access to opportunities.
+                        </p>
+                        <p>
+                            Many educated and skilled youth remain unemployed not because of a lack of ability,
+                            but due to a mismatch between available opportunities and accessible information channels.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="container mb-4">
+        <h2 class="text-center mb-4">Platform Features</h2>
+        <div class="row">
+            <div class="col-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">👤</div>
+                        <h3>For Job Seekers</h3>
+                        <ul style="text-align: left; margin-top: 1rem;">
+                            <li>Create professional profiles</li>
+                            <li>Search and filter job listings</li>
+                            <li>Apply directly to employers</li>
+                            <li>Track application status</li>
+                            <li>Access training programs</li>
+                            <li>Get job recommendations</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🏢</div>
+                        <h3>For Employers</h3>
+                        <ul style="text-align: left; margin-top: 1rem;">
+                            <li>Post job vacancies</li>
+                            <li>Review applications</li>
+                            <li>Shortlist candidates</li>
+                            <li>Schedule interviews</li>
+                            <li>Access verified talent pool</li>
+                            <li>Manage recruitment</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">📚</div>
+                        <h3>For Training Providers</h3>
+                        <ul style="text-align: left; margin-top: 1rem;">
+                            <li>List training programs</li>
+                            <li>Reach target audience</li>
+                            <li>Manage course enrollment</li>
+                            <li>Track student progress</li>
+                            <li>Partner with employers</li>
+                            <li>View analytics</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="container mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="text-center mb-4">How It Works</h2>
+                <div class="row">
+                    <div class="col-3 text-center">
+                        <div style="font-size: 4rem; color: var(--primary-color); margin-bottom: 1rem;">1</div>
+                        <h4>Register</h4>
+                        <p>Create your account as a job seeker or employer</p>
+                    </div>
+                    <div class="col-3 text-center">
+                        <div style="font-size: 4rem; color: var(--primary-color); margin-bottom: 1rem;">2</div>
+                        <h4>Build Profile</h4>
+                        <p>Add your skills, experience, and preferences</p>
+                    </div>
+                    <div class="col-3 text-center">
+                        <div style="font-size: 4rem; color: var(--primary-color); margin-bottom: 1rem;">3</div>
+                        <h4>Connect</h4>
+                        <p>Match with opportunities or candidates</p>
+                    </div>
+                    <div class="col-3 text-center">
+                        <div style="font-size: 4rem; color: var(--primary-color); margin-bottom: 1rem;">4</div>
+                        <h4>Succeed</h4>
+                        <p>Start your career journey or find talent</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="container mb-4">
+        <div class="card" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); color: white;">
+            <div class="card-body text-center p-4">
+                <h2 style="color: white;">Ready to Get Started?</h2>
+                <p style="font-size: 1.2rem; margin-bottom: 2rem;">
+                    Join thousands of youth and employers already using KaziConnect
+                </p>
+                <div class="hero-buttons">
+                    <a href="register.html" class="btn" style="background-color: white; color: var(--primary-color);">
+                        Register Now
+                    </a>
+                    <a href="login.html" class="btn btn-outline" style="color: white; border-color: white;">
+                        Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="container mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="text-center" style="margin: 0;">Contact Us</h2>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <h3>Get in Touch</h3>
+                        <p>Have questions? We'd love to hear from you.</p>
+                        <div style="margin-top: 2rem;">
+                            <p><strong>Email:</strong> info@kaziconnect.co.ke</p>
+                            <p><strong>Phone:</strong> +254 700 000 000</p>
+                            <p><strong>Address:</strong> Nairobi, Kenya</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <form id="contactForm">
+                            <div class="form-group">
+                                <label class="form-label">Name</label>
+                                <input type="text" class="form-control" id="contactName" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" id="contactEmail" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Message</label>
+                                <textarea class="form-control" id="contactMessage" rows="4" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>KaziConnect</h4>
+                    <p>Empowering Kenyan youth through digital job matching and skill development.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="login.html">Login</a></li>
+                        <li><a href="register.html">Register</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>For Job Seekers</h4>
+                    <ul class="footer-links">
+                        <li><a href="register.html?role=job-seeker">Create Profile</a></li>
+                        <li><a href="#">Browse Jobs</a></li>
+                        <li><a href="#">Training Programs</a></li>
+                        <li><a href="#">Career Tips</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>For Employers</h4>
+                    <ul class="footer-links">
+                        <li><a href="register.html?role=employer">Post Jobs</a></li>
+                        <li><a href="#">Find Talent</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">Resources</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 KaziConnect. All rights reserved. | Built to empower Kenyan youth</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/utils.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        // Initialize landing page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate stats
+            animateStats();
+
+            // Handle contact form
+            document.getElementById('contactForm').addEventListener('submit', handleContactForm);
+        });
+
+        function animateStats() {
+            // Simulated stats - will be replaced with real API data
+            const stats = {
+                jobs: 1250,
+                seekers: 8500,
+                employers: 340,
+                matches: 2100
+            };
+
+            animateValue('statsJobs', 0, stats.jobs, 2000);
+            animateValue('statsSeekers', 0, stats.seekers, 2000);
+            animateValue('statsEmployers', 0, stats.employers, 2000);
+            animateValue('statsMatches', 0, stats.matches, 2000);
+        }
+
+        function animateValue(id, start, end, duration) {
+            const element = document.getElementById(id);
+            const range = end - start;
+            const increment = end > start ? 1 : -1;
+            const stepTime = Math.abs(Math.floor(duration / range));
+            let current = start;
+
+            const timer = setInterval(function() {
+                current += increment * Math.ceil(range / 50);
+                if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
+                    current = end;
+                    clearInterval(timer);
+                }
+                element.textContent = current.toLocaleString();
+            }, stepTime);
+        }
+
+        function handleContactForm(e) {
+            e.preventDefault();
+            const name = document.getElementById('contactName').value;
+            const email = document.getElementById('contactEmail').value;
+            const message = document.getElementById('contactMessage').value;
+
+            // TODO: Send to API
+            console.log('Contact form submitted:', { name, email, message });
+
+            showAlert('Thank you! Your message has been sent.', 'success');
+            e.target.reset();
+        }
+    </script>
+</body>
+</html>

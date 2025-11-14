@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - KaziConnect</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background-color: var(--surface-color);
+            box-shadow: var(--shadow-sm);
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            overflow-y: auto;
+            transition: transform 0.3s;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: var(--spacing-lg);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-logo {
+            font-size: var(--font-size-xl);
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-bar {
+            background-color: var(--surface-color);
+            padding: var(--spacing-md) var(--spacing-xl);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-bar-left {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .top-bar-right {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-lg);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            cursor: pointer;
+            padding: var(--spacing-sm);
+            border-radius: var(--border-radius-sm);
+            transition: background-color var(--transition-speed);
+        }
+
+        .user-menu:hover {
+            background-color: var(--background-color);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .content-area {
+            flex: 1;
+            padding: var(--spacing-xl);
+            background-color: var(--background-color);
+        }
+
+        .page-header {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .page-title {
+            font-size: var(--font-size-xxl);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .quick-action-card {
+            background-color: var(--surface-color);
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            border: 2px solid transparent;
+        }
+
+        .quick-action-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .quick-action-icon {
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html" class="sidebar-logo">
+                <span>🔗</span>
+                <span>KaziConnect</span>
+            </a>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li class="sidebar-menu-item">
+                <a href="dashboard.html" class="sidebar-menu-link active">
+                    <span class="sidebar-menu-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="jobs.html" class="sidebar-menu-link">
+                    <span class="sidebar-menu-icon">💼</span>
+                    <span>Browse Jobs</span>
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="applications.html" class="sidebar-menu-link">
+                    <span class="sidebar-menu-icon">📝</span>
+                    <span>My Applications</span>
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="profile.html" class="sidebar-menu-link">
+                    <span class="sidebar-menu-icon">👤</span>
+                    <span>My Profile</span>
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="#" class="sidebar-menu-link">
+                    <span class="sidebar-menu-icon">📚</span>
+                    <span>Training</span>
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="#" class="sidebar-menu-link">
+                    <span class="sidebar-menu-icon">💬</span>
+                    <span>Messages</span>
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="#" class="sidebar-menu-link">
+                    <span class="sidebar-menu-icon">⚙️</span>
+                    <span>Settings</span>
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="#" class="sidebar-menu-link" data-action="logout">
+                    <span class="sidebar-menu-icon">🚪</span>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="top-bar-left">
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" style="display: none;">☰</button>
+                <h2>Welcome back, <span id="userName">User</span>!</h2>
+            </div>
+            <div class="top-bar-right">
+                <div class="notification-badge" data-notification-count data-count="3" style="position: relative;">
+                    🔔
+                </div>
+                <div class="user-menu" id="userMenu">
+                    <div class="user-avatar" id="userAvatar">IL</div>
+                    <span id="userNameMenu">Irene lossie</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <div class="page-header">
+                <h1 class="page-title">Dashboard</h1>
+                <p class="page-subtitle">Track your job search progress and opportunities</p>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card primary">
+                    <div class="stat-info">
+                        <h3>Applications Sent</h3>
+                        <div class="stat-value" id="statApplications">0</div>
+                    </div>
+                    <div class="stat-icon">📝</div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-info">
+                        <h3>Shortlisted</h3>
+                        <div class="stat-value" id="statShortlisted">0</div>
+                    </div>
+                    <div class="stat-icon">⭐</div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-info">
+                        <h3>Interviews</h3>
+                        <div class="stat-value" id="statInterviews">0</div>
+                    </div>
+                    <div class="stat-icon">👔</div>
+                </div>
+                <div class="stat-card danger">
+                    <div class="stat-info">
+                        <h3>Profile Views</h3>
+                        <div class="stat-value" id="statViews">0</div>
+                    </div>
+                    <div class="stat-icon">👁️</div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <div class="quick-action-card" onclick="window.location.href='jobs.html'">
+                    <div class="quick-action-icon">🔍</div>
+                    <h4>Search Jobs</h4>
+                    <p>Find your next opportunity</p>
+                </div>
+                <div class="quick-action-card" onclick="window.location.href='profile.html'">
+                    <div class="quick-action-icon">✏️</div>
+                    <h4>Update Profile</h4>
+                    <p>Keep your profile current</p>
+                </div>
+                <div class="quick-action-card" onclick="window.location.href='applications.html'">
+                    <div class="quick-action-icon">📊</div>
+                    <h4>Track Applications</h4>
+                    <p>Monitor your progress</p>
+                </div>
+                <div class="quick-action-card" onclick="alert('Coming soon!')">
+                    <div class="quick-action-icon">📚</div>
+                    <h4>Browse Training</h4>
+                    <p>Enhance your skills</p>
+                </div>
+            </div>
+
+            <!-- Recent Jobs -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Recommended Jobs</h3>
+                </div>
+                <div class="card-body" id="recommendedJobs">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading jobs...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: var(--spacing-xl);">
+                <!-- Recent Applications -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Recent Applications</h3>
+                    </div>
+                    <div class="card-body" id="recentApplications">
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            <p>Loading applications...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/utils.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/app.js"></script>
+   <!-- <script>
+        // Protect page - require authentication and job-seeker role
+        requireRole('job-seeker');
+
+        // Page initialization
+        document.addEventListener('DOMContentLoaded', async function() {
+            const user = getCurrentUser();
+
+            if (user) {
+                // Update user display
+                document.getElementById('userName').textContent = user.fullName || user.username;
+                document.getElementById('userNameMenu').textContent = user.fullName || user.username;
+
+                const initials = getInitials(user.fullName || user.username);
+                document.getElementById('userAvatar').textContent = initials;
+                document.getElementById('userAvatar').style.backgroundColor = stringToColor(user.email);
+
+                // Load dashboard data
+                await loadDashboardData();
+            }
+
+            // Setup mobile menu
+            setupMobileMenu();
+        });
+
+        async function loadDashboardData() {
+            try {
+                // Load applications
+                const applicationsResponse = await KaziAPI.Application.getMyApplications();
+
+                if (applicationsResponse.success) {
+                    const applications = applicationsResponse.applications || [];
+
+                    // Update stats
+                    document.getElementById('statApplications').textContent = applications.length;
+
+                    const shortlisted = applications.filter(app => app.status === 'shortlisted').length;
+                    document.getElementById('statShortlisted').textContent = shortlisted;
+
+                    const interviews = applications.filter(app => app.status === 'interview').length;
+                    document.getElementById('statInterviews').textContent = interviews;
+
+                    // Display recent applications
+                    displayRecentApplications(applications.slice(0, 5));
+                } else {
+                    // Show empty state or demo data
+                    displayDemoApplications();
+                }
+
+                // Load recommended jobs
+                const jobsResponse = await KaziAPI.Job.getJobs({ limit: 5 });
+
+                if (jobsResponse.success) {
+                    displayRecommendedJobs(jobsResponse.jobs || []);
+                } else {
+                    displayDemoJobs();
+                }
+
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+                // Show demo data
+                displayDemoApplications();
+                displayDemoJobs();
+            }
+        }
+
+        function displayRecentApplications(applications) {
+            const container = document.getElementById('recentApplications');
+
+            if (applications.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <h3 class="empty-state-title">No Applications Yet</h3>
+                        <p class="empty-state-text">Start applying to jobs to see your applications here</p>
+                        <a href="jobs.html" class="btn btn-primary">Browse Jobs</a>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Job Title</th>
+                                <th>Company</th>
+                                <th>Applied Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${applications.map(app => `
+                                <tr>
+                                    <td>${app.jobTitle}</td>
+                                    <td>${app.companyName}</td>
+                                    <td>${formatDate(app.applicationDate, 'relative')}</td>
+                                    <td><span class="status-badge status-${app.status}">${app.status}</span></td>
+                                    <td><a href="applications.html?id=${app.applicationID}" class="btn btn-sm btn-outline">View</a></td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function displayRecommendedJobs(jobs) {
+            const container = document.getElementById('recommendedJobs');
+
+            if (jobs.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🔍</div>
+                        <h3 class="empty-state-title">No Recommendations Yet</h3>
+                        <p class="empty-state-text">Update your profile to get personalized job recommendations</p>
+                        <a href="profile.html" class="btn btn-primary">Update Profile</a>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = jobs.map(job => `
+                <div class="job-card">
+                    <div class="job-card-header">
+                        <div>
+                            <h3 class="job-title">${job.jobTitle}</h3>
+                            <p class="job-company">${job.companyName}</p>
+                            <p class="job-location">📍 ${job.location}</p>
+                        </div>
+                    </div>
+                    <p class="job-description">${truncateText(job.description, 150)}</p>
+                    <div class="job-footer">
+                        <span class="job-salary">${formatCurrency(job.salary)}</span>
+                        <a href="jobs.html?id=${job.jobID}" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Demo data for when backend is not connected
+        function displayDemoApplications() {
+            const demoApps = [
+                { jobTitle: 'Software Developer', companyName: 'Tech Co', applicationDate: new Date(2025, 0, 10), status: 'pending', applicationID: 1 },
+                { jobTitle: 'Data Analyst', companyName: 'Data Corp', applicationDate: new Date(2025, 0, 8), status: 'shortlisted', applicationID: 2 },
+                { jobTitle: 'UI/UX Designer', companyName: 'Design Studio', applicationDate: new Date(2025, 0, 5), status: 'rejected', applicationID: 3 }
+            ];
+
+            document.getElementById('statApplications').textContent = '3';
+            document.getElementById('statShortlisted').textContent = '1';
+            document.getElementById('statInterviews').textContent = '0';
+            document.getElementById('statViews').textContent = '47';
+
+            displayRecentApplications(demoApps);
+        }
+
+        function displayDemoJobs() {
+            const demoJobs = [
+                { jobID: 1, jobTitle: 'Full Stack Developer', companyName: 'Innovation Tech', location: 'Nairobi', description: 'We are looking for an experienced full stack developer to join our team.', salary: 150000 },
+                { jobID: 2, jobTitle: 'Marketing Manager', companyName: 'Brand Solutions', location: 'Mombasa', description: 'Lead our marketing team and drive brand growth across East Africa.', salary: 120000 },
+                { jobID: 3, jobTitle: 'Customer Service Rep', companyName: 'Service Plus', location: 'Kisumu', description: 'Provide excellent customer service and support to our clients.', salary: 45000 }
+            ];
+
+            displayRecommendedJobs(demoJobs);
+        }
+
+        function setupMobileMenu() {
+            const toggle = document.getElementById('mobileMenuToggle');
+            const sidebar = document.getElementById('sidebar');
+
+            if (toggle) {
+                toggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                });
+            }
+        }
+    </script>-->
+</body>
+</html>

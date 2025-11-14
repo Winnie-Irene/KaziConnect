@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - KaziConnect</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            padding: var(--spacing-lg);
+        }
+
+        .auth-card {
+            background-color: var(--surface-color);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            max-width: 500px;
+            width: 100%;
+            padding: var(--spacing-xxl);
+            margin: var(--spacing-lg) 0;
+        }
+
+        .auth-logo {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .auth-logo-text {
+            font-size: var(--font-size-xxl);
+            font-weight: bold;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+        }
+
+        .auth-title {
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+            color: var(--text-primary);
+        }
+
+        .role-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .role-option {
+            padding: var(--spacing-lg);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+
+        .role-option:hover {
+            border-color: var(--primary-color);
+            background-color: var(--background-color);
+        }
+
+        .role-option.active {
+            border-color: var(--primary-color);
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .role-option-icon {
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .role-option-title {
+            font-weight: 600;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .role-option-desc {
+            font-size: var(--font-size-sm);
+            opacity: 0.8;
+        }
+
+        .password-strength {
+            height: 4px;
+            background-color: var(--border-color);
+            border-radius: 2px;
+            margin-top: var(--spacing-sm);
+            overflow: hidden;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0;
+            transition: all var(--transition-speed);
+        }
+
+        .password-strength-bar.weak {
+            width: 33%;
+            background-color: var(--error-color);
+        }
+
+        .password-strength-bar.medium {
+            width: 66%;
+            background-color: var(--warning-color);
+        }
+
+        .password-strength-bar.strong {
+            width: 100%;
+            background-color: var(--success-color);
+        }
+
+        .password-requirements {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            margin-top: var(--spacing-sm);
+        }
+
+        .password-requirements li {
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .password-requirements li.met {
+            color: var(--success-color);
+        }
+
+        .password-toggle {
+            position: relative;
+        }
+
+        .password-toggle-btn {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: var(--spacing-lg);
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <div class="auth-logo-text">
+                    <span>🔗</span>
+                    <span>KaziConnect</span>
+                </div>
+            </div>
+
+            <h2 class="auth-title">Create Your Account</h2>
+
+            <div id="alertContainer"></div>
+
+            <!-- Role Selection -->
+            <div class="role-selector">
+                <div class="role-option active" data-role="job-seeker" id="roleJobSeeker">
+                    <div class="role-option-icon">👤</div>
+                    <div class="role-option-title">Job Seeker</div>
+                    <div class="role-option-desc">Find opportunities</div>
+                </div>
+                <div class="role-option" data-role="employer" id="roleEmployer">
+                    <div class="role-option-icon">🏢</div>
+                    <div class="role-option-title">Employer</div>
+                    <div class="role-option-desc">Hire talent</div>
+                </div>
+            </div>
+
+            <form id="registerForm">
+                <input type="hidden" id="role" name="role" value="job-seeker">
+
+                <!-- Common Fields -->
+                <div class="form-group">
+                    <label class="form-label" for="fullName">Full Name *</label>
+                    <input
+                        type="text"
+                        id="fullName"
+                        name="fullName"
+                        class="form-control"
+                        placeholder="Enter your full name"
+                        required
+                    >
+                    <span class="form-error" id="fullNameError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="email">Email Address *</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        class="form-control"
+                        placeholder="your.email@example.com"
+                        required
+                    >
+                    <span class="form-error" id="emailError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="phone">Phone Number *</label>
+                    <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        class="form-control"
+                        placeholder="+254 700 000 000"
+                        required
+                    >
+                    <span class="form-error" id="phoneError"></span>
+                </div>
+
+                <!-- Employer-specific field -->
+                <div class="form-group" id="companyNameGroup" style="display: none;">
+                    <label class="form-label" for="companyName">Company Name *</label>
+                    <input
+                        type="text"
+                        id="companyName"
+                        name="companyName"
+                        class="form-control"
+                        placeholder="Your company name"
+                    >
+                    <span class="form-error" id="companyNameError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="password">Password *</label>
+                    <div class="password-toggle">
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="form-control"
+                            placeholder="Create a strong password"
+                            required
+                        >
+                        <button
+                            type="button"
+                            class="password-toggle-btn"
+                            id="togglePassword"
+                            aria-label="Toggle password visibility"
+                        >
+                            👁️
+                        </button>
+                    </div>
+                    <div class="password-strength">
+                        <div class="password-strength-bar" id="passwordStrengthBar"></div>
+                    </div>
+                    <ul class="password-requirements" id="passwordRequirements">
+                        <li id="req-length">At least 8 characters</li>
+                        <li id="req-uppercase">One uppercase letter</li>
+                        <li id="req-lowercase">One lowercase letter</li>
+                        <li id="req-number">One number</li>
+                    </ul>
+                    <span class="form-error" id="passwordError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="confirmPassword">Confirm Password *</label>
+                    <div class="password-toggle">
+                        <input
+                            type="password"
+                            id="confirmPassword"
+                            name="confirmPassword"
+                            class="form-control"
+                            placeholder="Re-enter your password"
+                            required
+                        >
+                        <button
+                            type="button"
+                            class="password-toggle-btn"
+                            id="toggleConfirmPassword"
+                            aria-label="Toggle password visibility"
+                        >
+                            👁️
+                        </button>
+                    </div>
+                    <span class="form-error" id="confirmPasswordError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label style="display: flex; align-items: start; gap: 0.5rem;">
+                        <input type="checkbox" id="terms" name="terms" required>
+                        <span style="font-size: var(--font-size-sm);">
+                            I agree to the <a href="#" target="_blank">Terms of Service</a> and
+                            <a href="#" target="_blank">Privacy Policy</a>
+                        </span>
+                    </label>
+                    <span class="form-error" id="termsError"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block" id="registerBtn">
+                    Create Account
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Already have an account? <a href="login.html">Login here</a></p>
+                <p style="margin-top: var(--spacing-md);">
+                    <a href="index.html">← Back to Home</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const roleOptions = document.querySelectorAll('.role-option');
+            const roleInput = document.getElementById('role');
+            const companyNameGroup = document.getElementById('companyNameGroup');
+            const companyNameInput = document.getElementById('companyName');
+            const registerForm = document.getElementById('registerForm');
+            const registerBtn = document.getElementById('registerBtn');
+            const passwordInput = document.getElementById('password');
+            const togglePassword = document.getElementById('togglePassword');
+            const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+
+            // Check URL params for role
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlRole = urlParams.get('role');
+            if (urlRole) {
+                roleOptions.forEach(option => {
+                    if (option.dataset.role === urlRole) {
+                        selectRole(option);
+                    }
+                });
+            }
+
+            // Handle role selection
+            roleOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    selectRole(this);
+                });
+            });
+
+            function selectRole(selectedOption) {
+                roleOptions.forEach(opt => opt.classList.remove('active'));
+                selectedOption.classList.add('active');
+                const role = selectedOption.dataset.role;
+                roleInput.value = role;
+
+                // Show/hide employer-specific fields
+                if (role === 'employer') {
+                    companyNameGroup.style.display = 'block';
+                    companyNameInput.required = true;
+                } else {
+                    companyNameGroup.style.display = 'none';
+                    companyNameInput.required = false;
+                }
+            }
+
+            // Toggle password visibility
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.type === 'password' ? 'text' : 'password';
+                passwordInput.type = type;
+                togglePassword.textContent = type === 'password' ? '👁️' : '🙈';
+            });
+
+            toggleConfirmPassword.addEventListener('click', function() {
+                const type = confirmPasswordInput.type === 'password' ? 'text' : 'password';
+                confirmPasswordInput.type = type;
+                toggleConfirmPassword.textContent = type === 'password' ? '👁️' : '🙈';
+            });
+
+            // Password strength checker
+            passwordInput.addEventListener('input', function() {
+                checkPasswordStrength(this.value);
+            });
+
+            // Handle form submission
+            registerForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                clearFormErrors();
+
+                const formData = {
+                    role: roleInput.value,
+                    fullName: document.getElementById('fullName').value.trim(),
+                    email: document.getElementById('email').value.trim(),
+                    phone: document.getElementById('phone').value.trim(),
+                    password: passwordInput.value,
+                    confirmPassword: confirmPasswordInput.value,
+                    terms: document.getElementById('terms').checked
+                };
+
+                if (formData.role === 'employer') {
+                    formData.companyName = companyNameInput.value.trim();
+                }
+
+                // Validate
+                if (!validateRegistration(formData)) {
+                    return;
+                }
+
+                // Disable button and show loading
+                registerBtn.disabled = true;
+                registerBtn.textContent = 'Creating Account...';
+
+                try {
+                    const response = await register(formData);
+
+                    if (response.success) {
+                        showAlert('Account created successfully! Redirecting to login...', 'success');
+                        setTimeout(() => {
+                            window.location.href = 'login.html';
+                        }, 2000);
+                    } else {
+                        showAlert(response.message || 'Registration failed. Please try again.', 'error');
+                        registerBtn.disabled = false;
+                        registerBtn.textContent = 'Create Account';
+                    }
+                } catch (error) {
+                    console.error('Registration error:', error);
+                    showAlert('An error occurred. Please try again.', 'error');
+                    registerBtn.disabled = false;
+                    registerBtn.textContent = 'Create Account';
+                }
+            });
+        });
+
+        function checkPasswordStrength(password) {
+            const requirements = {
+                length: password.length >= 8,
+                uppercase: /[A-Z]/.test(password),
+                lowercase: /[a-z]/.test(password),
+                number: /[0-9]/.test(password)
+            };
+
+            // Update requirement indicators
+            document.getElementById('req-length').classList.toggle('met', requirements.length);
+            document.getElementById('req-uppercase').classList.toggle('met', requirements.uppercase);
+            document.getElementById('req-lowercase').classList.toggle('met', requirements.lowercase);
+            document.getElementById('req-number').classList.toggle('met', requirements.number);
+
+            // Calculate strength
+            const metCount = Object.values(requirements).filter(Boolean).length;
+            const strengthBar = document.getElementById('passwordStrengthBar');
+
+            strengthBar.className = 'password-strength-bar';
+            if (metCount === 4) {
+                strengthBar.classList.add('strong');
+            } else if (metCount >= 2) {
+                strengthBar.classList.add('medium');
+            } else if (metCount >= 1) {
+                strengthBar.classList.add('weak');
+            }
+        }
+
+        function validateRegistration(data) {
+            let isValid = true;
+
+            if (data.fullName.length < 3) {
+                showFieldError('fullName', 'Name must be at least 3 characters');
+                isValid = false;
+            }
+
+            if (!validateEmail(data.email)) {
+                showFieldError('email', 'Please enter a valid email address');
+                isValid = false;
+            }
+
+            if (!validatePhone(data.phone)) {
+                showFieldError('phone', 'Please enter a valid Kenyan phone number');
+                isValid = false;
+            }
+
+            if (data.role === 'employer' && data.companyName.length < 2) {
+                showFieldError('companyName', 'Company name is required');
+                isValid = false;
+            }
+
+            if (data.password.length < 8) {
+                showFieldError('password', 'Password must be at least 8 characters');
+                isValid = false;
+            }
+
+            if (data.password !== data.confirmPassword) {
+                showFieldError('confirmPassword', 'Passwords do not match');
+                isValid = false;
+            }
+
+            if (!data.terms) {
+                showFieldError('terms', 'You must agree to the terms');
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        function clearFormErrors() {
+            document.querySelectorAll('.form-error').forEach(el => el.textContent = '');
+            document.querySelectorAll('.form-control').forEach(el => el.classList.remove('error'));
+        }
+
+        function showFieldError(fieldId, message) {
+            const field = document.getElementById(fieldId);
+            const errorSpan = document.getElementById(fieldId + 'Error');
+            if (field) field.classList.add('error');
+            if (errorSpan) errorSpan.textContent = message;
+        }
+
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function validatePhone(phone) {
+            const re = /^(\+?254|0)[17]\d{8}$/;
+            return re.test(phone.replace(/\s/g, ''));
+        }
+
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertClass = type === 'success' ? 'alert-success' : 'alert-error';
+
+            alertContainer.innerHTML = `
+                <div class="alert ${alertClass}">
+                    ${message}
+                </div>
+            `;
+
+            setTimeout(() => {
+                alertContainer.innerHTML = '';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

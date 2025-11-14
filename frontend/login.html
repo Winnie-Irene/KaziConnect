@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - KaziConnect</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            padding: var(--spacing-lg);
+        }
+
+        .auth-card {
+            background-color: var(--surface-color);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            max-width: 450px;
+            width: 100%;
+            padding: var(--spacing-xxl);
+        }
+
+        .auth-logo {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .auth-logo-text {
+            font-size: var(--font-size-xxl);
+            font-weight: bold;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+        }
+
+        .auth-title {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+            color: var(--text-primary);
+        }
+
+        .auth-divider {
+            text-align: center;
+            margin: var(--spacing-lg) 0;
+            color: var(--text-secondary);
+            position: relative;
+        }
+
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background-color: var(--border-color);
+        }
+
+        .auth-divider::before {
+            left: 0;
+        }
+
+        .auth-divider::after {
+            right: 0;
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: var(--spacing-lg);
+            color: var(--text-secondary);
+        }
+
+        .password-toggle {
+            position: relative;
+        }
+
+        .password-toggle-btn {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <div class="auth-logo-text">
+                    <span>🔗</span>
+                    <span>KaziConnect</span>
+                </div>
+            </div>
+
+            <h2 class="auth-title">Welcome Back</h2>
+
+            <div id="alertContainer"></div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label" for="email">Email or Phone</label>
+                    <input
+                        type="text"
+                        id="email"
+                        name="email"
+                        class="form-control"
+                        placeholder="Enter your email or phone number"
+                        required
+                    >
+                    <span class="form-error" id="emailError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <div class="password-toggle">
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="form-control"
+                            placeholder="Enter your password"
+                            required
+                        >
+                        <button
+                            type="button"
+                            class="password-toggle-btn"
+                            id="togglePassword"
+                            aria-label="Toggle password visibility"
+                        >
+                            👁️
+                        </button>
+                    </div>
+                    <span class="form-error" id="passwordError"></span>
+                </div>
+
+                <div class="form-group" style="display: flex; justify-content: space-between; align-items: center;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; margin: 0;">
+                        <input type="checkbox" id="rememberMe" name="rememberMe">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="forgot-password.html" style="font-size: var(--font-size-sm);">
+                        Forgot password?
+                    </a>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block" id="loginBtn">
+                    Login
+                </button>
+            </form>
+
+            <div class="auth-divider">OR</div>
+
+            <div style="display: flex; flex-direction: column; gap: var(--spacing-sm);">
+                <button class="btn btn-outline btn-block" onclick="alert('Google login coming soon!')">
+                    🔍 Continue with Google
+                </button>
+            </div>
+
+            <div class="auth-footer">
+                <p>Don't have an account? <a href="register.html">Register here</a></p>
+                <p style="margin-top: var(--spacing-md);">
+                    <a href="index.html">← Back to Home</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const loginBtn = document.getElementById('loginBtn');
+            const togglePassword = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('password');
+
+            // Toggle password visibility
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.type === 'password' ? 'text' : 'password';
+                passwordInput.type = type;
+                togglePassword.textContent = type === 'password' ? '👁️' : '🙈';
+            });
+
+            // Handle login form submission
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                // Clear previous errors
+                clearFormErrors();
+
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value;
+                const rememberMe = document.getElementById('rememberMe').checked;
+
+                // Validate inputs
+                if (!validateEmail(email) && !validatePhone(email)) {
+                    showFieldError('email', 'Please enter a valid email or phone number');
+                    return;
+                }
+
+                if (password.length < 6) {
+                    showFieldError('password', 'Password must be at least 6 characters');
+                    return;
+                }
+
+                // Disable button and show loading
+                loginBtn.disabled = true;
+                loginBtn.textContent = 'Logging in...';
+
+                try {
+                    // Call login API
+                    const response = await login(email, password, rememberMe);
+
+                    if (response.success) {
+                        showAlert('Login successful! Redirecting...', 'success');
+
+                        // Redirect based on user role
+                        setTimeout(() => {
+                            switch(response.user.role) {
+                                case 'job-seeker':
+                                    window.location.href = 'job-seeker/dashboard.html';
+                                    break;
+                                case 'employer':
+                                    window.location.href = 'employer/dashboard.html';
+                                    break;
+                                case 'admin':
+                                    window.location.href = 'admin/dashboard.html';
+                                    break;
+                                default:
+                                    window.location.href = 'index.html';
+                            }
+                        }, 1500);
+                    } else {
+                        showAlert(response.message || 'Login failed. Please try again.', 'error');
+                        loginBtn.disabled = false;
+                        loginBtn.textContent = 'Login';
+                    }
+                } catch (error) {
+                    console.error('Login error:', error);
+                    showAlert('An error occurred. Please try again.', 'error');
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = 'Login';
+                }
+            });
+        });
+
+        function clearFormErrors() {
+            document.getElementById('emailError').textContent = '';
+            document.getElementById('passwordError').textContent = '';
+            document.getElementById('email').classList.remove('error');
+            document.getElementById('password').classList.remove('error');
+        }
+
+        function showFieldError(fieldId, message) {
+            const field = document.getElementById(fieldId);
+            const errorSpan = document.getElementById(fieldId + 'Error');
+            field.classList.add('error');
+            errorSpan.textContent = message;
+        }
+
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function validatePhone(phone) {
+            const re = /^(\+?254|0)[17]\d{8}$/;
+            return re.test(phone.replace(/\s/g, ''));
+        }
+
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertClass = type === 'success' ? 'alert-success' : 'alert-error';
+
+            alertContainer.innerHTML = `
+                <div class="alert ${alertClass}">
+                    ${message}
+                </div>
+            `;
+
+            setTimeout(() => {
+                alertContainer.innerHTML = '';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
