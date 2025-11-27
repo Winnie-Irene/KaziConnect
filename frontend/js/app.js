@@ -2,6 +2,8 @@
  * KaziConnect - Main Application Script
  * Global application initialization and utilities
  */
+const cors = require('cors');
+app.use(cors({ origin: '*', credentials: true }));
 
 // Application state
 const AppState = {
