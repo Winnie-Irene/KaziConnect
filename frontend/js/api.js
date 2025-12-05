@@ -3,7 +3,7 @@
  * Handles all HTTP requests to the backend API
  */
 
-const API_BASE_URL = 'https://kazi-connect-phi.vercel.app/api';
+const API_BASE_URL = 'https://kaziconnect1-1.onrender.com';
 
 /**
  * Make HTTP request
